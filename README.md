@@ -1,6 +1,6 @@
 # LLM Benchmarking via Representation Multi-task Learning
 
-This repository is the clean public-facing version of our case study on benchmarking LLMs with a representation multi-task learning framework.
+This repository is the clean public-facing version of our case study on benchmarking LLMs with a representation multi-task learning framework. It collects the main code, real-data inputs, and exported result tables for the MMLU application in the paper.
 
 ## Repository structure
 
@@ -16,54 +16,91 @@ LLM-Benchmarking-via-Representation-Multi-task-Learning/
 
 ### `application/`
 
-This folder contains the main code for the real-data application.
+This folder contains the code used to fit the methods in the paper on the MMLU item-response matrix.
 
 - `run_mmlu_real_data_ai_measurement.py`
-  Main Python script for the real-data estimation pipeline.
+  Main Python script for the real-data estimation pipeline. In the paper's notation, this is the driver that fits the proposed estimator, the global benchmark, and related baselines on the model-by-item binary response matrix.
 - `mmlu_initialization.R`
-  R script for initialization and setup checks for the MMLU application.
+  R script that reproduces and inspects the initialization procedure used before optimization.
 
 ### `real_data/`
 
-This folder contains the public real-data inputs used by the application.
+This folder contains the real-data inputs used by the application section of the paper.
 
 - `item_contents.csv`
-  Item-level content file for the benchmark items.
+  Item-level content file. It maps each benchmark item to its subject.
 - `item_level_matrix.part01.csv`
   First half of the model-by-item binary response matrix.
 - `item_level_matrix.part02.csv`
   Second half of the model-by-item binary response matrix.
 - `metadata.csv`
-  Model-level metadata used in the application analysis.
+  Model-level metadata used for model descriptions and follow-up analysis.
 
 ### `results/`
 
-This folder contains generated outputs from the project, such as:
+This folder contains exported outputs that correspond directly to the paper's ranking objects.
 
-- trait estimates
-- ranking tables
-- comparison summaries
-- figures
+The key files are:
 
-For example, the `Domain-specific traits/` subfolder stores subject-by-subject CSV outputs with:
+- `general_results.csv`
+  One row per model. This is the main general-ranking summary table and contains:
+  - the proposed general trait estimate `theta_G`
+  - the proposed general ranking
+  - the global benchmark general trait estimate `theta_G`
+  - the global benchmark ranking
+  - the raw overall accuracy score on a 0-100 scale
+  - the raw accuracy ranking
 
-- proposed domain-specific trait and rank
-- local domain-specific trait and rank
-- subject accuracy on a 0-100 scale and its rank
+- `Domain-specific traits/`
+  One CSV per subject. Each file stores, for every model:
+  - the proposed domain-specific trait estimate `theta_t` and its ranking
+  - the local benchmark domain-specific trait estimate and its ranking
+  - the subject-specific raw accuracy on a 0-100 scale and its ranking
+
+This matches the paper's comparison logic:
+
+- `proposed`
+  The representation multi-task learning estimator, which jointly estimates subject traits and a general trait.
+- `global`
+  The shared-general-trait benchmark that forces one common trait across subjects.
+- `local`
+  The subject-by-subject benchmark that fits each subject separately. In this repo it is used for domain-specific comparisons, not for the main general summary.
+- `accuracy`
+  The direct empirical score benchmark computed from the binary response matrix.
 
 ### `simulation/`
 
-This folder is reserved for simulation code and simulation outputs tied to the methodological part of the project.
+This folder is reserved for the simulation side of the project. In the current public repo it is only kept as a placeholder.
 
-At the moment, it is also kept as a clean placeholder in this version of the repo.
+## How The Files Map To The Paper
 
-## Design principle
+The paper studies two levels of latent ability:
 
-The structure is intentionally minimal:
+- A general trait, usually written as `theta_G`
+- Subject-specific traits, usually written as `theta_t`
 
-- put empirical and modeling scripts in `application/`
-- put public input data in `real_data/`
-- put generated outputs in `results/`
-- put simulation work in `simulation/`
+In this repo, the corresponding outputs are:
 
-This keeps the repository easy to read, easy to maintain, and easy to extend without adding extra nested README files or unnecessary subfolder complexity.
+- General trait comparison:
+  `results/general_results.csv`
+- Subject-specific trait comparison:
+  `results/Domain-specific traits/<subject>.csv`
+
+The real-data estimation uses:
+
+- `real_data/item_level_matrix.part01.csv`
+- `real_data/item_level_matrix.part02.csv`
+- `real_data/item_contents.csv`
+
+and the fitting pipeline is implemented in:
+
+- `application/run_mmlu_real_data_ai_measurement.py`
+
+## Reading Guide
+
+If you want to understand the application section quickly:
+
+1. Start with `results/general_results.csv` to see how the proposed general ranking differs from the global benchmark and from raw overall accuracy.
+2. Then open a few files in `results/Domain-specific traits/` to see how the proposed subject-specific traits compare with the local benchmark and raw subject accuracy.
+3. Use `real_data/item_contents.csv` to map each output file back to the benchmark subject structure.
+4. Use `application/run_mmlu_real_data_ai_measurement.py` if you want to trace how the estimates were produced.
