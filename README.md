@@ -1,10 +1,10 @@
 # LLM Benchmarking via Representation Multi-task Learning
 
-This repository is the clean public-facing version of our case study on benchmarking LLMs with a representation multi-task learning framework. It collects the main code, real-data inputs, and exported result tables for the MMLU application in the paper.
+This repository is about the benchmarking LLMs with a representation multi-task learning framework. It collects the main code, real-data inputs, and exported result tables for the MMLU application in the paper.
 
 ## Repository structure
 
-The repo currently uses a simple four-folder layout:
+The repo currently uses a four-folder layout:
 
 ```text
 LLM-Benchmarking-via-Representation-Multi-task-Learning/
@@ -29,10 +29,12 @@ This folder contains the real-data inputs used by the application section of the
 
 - `item_contents.csv`
   Item-level content file. It maps each benchmark item to its subject.
-- `item_level_matrix.part01.csv`
+- `item_response_matrix.part01.csv`
   First half of the model-by-item binary response matrix.
-- `item_level_matrix.part02.csv`
+- `item_response_matrix.part02.csv`
   Second half of the model-by-item binary response matrix.
+- `item_index_map.csv`
+  Mapping file that links rows in `item_contents.csv` to the item-column names used in the response matrix files.
 - `metadata.csv`
   Model-level metadata used for model descriptions and follow-up analysis.
 
@@ -72,29 +74,6 @@ This matches the paper's comparison logic:
 
 This folder is reserved for the simulation side of the project. In the current public repo it is only kept as a placeholder.
 
-## How The Files Map To The Paper
-
-The paper studies two levels of latent ability:
-
-- A general trait, usually written as `theta_G`
-- Subject-specific traits, usually written as `theta_t`
-
-In this repo, the corresponding outputs are:
-
-- General trait comparison:
-  `results/general_results.csv`
-- Subject-specific trait comparison:
-  `results/Domain-specific traits/<subject>.csv`
-
-The real-data estimation uses:
-
-- `real_data/item_level_matrix.part01.csv`
-- `real_data/item_level_matrix.part02.csv`
-- `real_data/item_contents.csv`
-
-and the fitting pipeline is implemented in:
-
-- `application/run_mmlu_real_data_ai_measurement.py`
 
 ## Reading Guide
 
@@ -102,5 +81,5 @@ If you want to understand the application section quickly:
 
 1. Start with `results/general_results.csv` to see how the proposed general ranking differs from the global benchmark and from raw overall accuracy.
 2. Then open a few files in `results/Domain-specific traits/` to see how the proposed subject-specific traits compare with the local benchmark and raw subject accuracy.
-3. Use `real_data/item_contents.csv` to map each output file back to the benchmark subject structure.
+3. Use `real_data/item_contents.csv` together with `real_data/item_index_map.csv` to map response-matrix columns back to benchmark items and subjects.
 4. Use `application/run_mmlu_real_data_ai_measurement.py` if you want to trace how the estimates were produced.
