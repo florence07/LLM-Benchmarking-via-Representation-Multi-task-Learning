@@ -25,21 +25,31 @@ This folder contains the main code for the real-data application.
 
 ### `real_data/`
 
-This folder contains the real-data file currently included in the public repo.
+This folder contains the public real-data inputs used by the application.
 
-- `item_contents_prompt_dedup.csv`
-  Prompt-deduplicated item-level content used in the MMLU application.
+- `item_contents.csv`
+  Item-level content file for the benchmark items.
+- `item_level_matrix.part01.csv`
+  First half of the model-by-item binary response matrix.
+- `item_level_matrix.part02.csv`
+  Second half of the model-by-item binary response matrix.
+- `metadata.csv`
+  Model-level metadata used in the application analysis.
 
 ### `results/`
 
-This folder is reserved for generated outputs from the project, such as:
+This folder contains generated outputs from the project, such as:
 
 - trait estimates
 - ranking tables
 - comparison summaries
 - figures
 
-At the moment, it is kept as a clean placeholder in this version of the repo.
+For example, the `Domain-specific traits/` subfolder stores subject-by-subject CSV outputs with:
+
+- proposed domain-specific trait and rank
+- local domain-specific trait and rank
+- subject accuracy on a 0-100 scale and its rank
 
 ### `simulation/`
 
