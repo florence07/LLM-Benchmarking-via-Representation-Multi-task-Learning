@@ -24,9 +24,9 @@
 # 0. Settings
 # ============================================================
 
-matrix_part_1 <- "real_data/raw/harness_hendrycksTest_5/item_level_matrix_prompt_dedup.part01.csv"
-matrix_part_2 <- "real_data/raw/harness_hendrycksTest_5/item_level_matrix_prompt_dedup.part02.csv"
-item_metadata_csv <- "real_data/metadata/item_contents_prompt_dedup.csv"
+matrix_part_1 <- "real_data/item_response_matrix.part01.csv"
+matrix_part_2 <- "real_data/item_response_matrix.part02.csv"
+item_metadata_csv <- "real_data/item_contents.csv"
 
 # Match the intended real-data run here.
 theta_bound <- 4.0
